@@ -27,3 +27,22 @@ func TestSubStr(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkSubStr(b *testing.B) {
+	s := "黑化黑灰化肥灰会挥发发灰黑讳为黑灰花会回飞"
+	for i := 0; i < 13; i++ {
+		s = s + s
+	}
+	ans := 8
+
+	b.Logf("len(s) = %d", len(s))
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		actual := lengthOfNonRepeatingSubStr(s)
+		if actual != ans {
+			b.Errorf("got %d for input %s; expected %d",
+				actual, s, ans)
+		}
+	}
+}

@@ -18,6 +18,8 @@ type userError interface {
 // 精妙！
 func errWrapper(handler appHandler) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		// panic
 		defer func() {
 			r := recover()
 			if r != nil {
@@ -26,13 +28,18 @@ func errWrapper(handler appHandler) func(http.ResponseWriter, *http.Request) {
 					http.StatusInternalServerError)
 			}
 		}()
+
 		err := handler(w, r)
 		if err != nil {
 			log.Printf("Error handling request: %s", err.Error())
+
+			// user error
 			if usrErr, ok := err.(userError); ok {
 				http.Error(w, usrErr.Message(), http.StatusBadRequest)
 				return
 			}
+
+			// system error
 			code := http.StatusOK
 			switch {
 			case os.IsNotExist(err):
