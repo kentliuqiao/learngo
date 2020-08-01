@@ -51,6 +51,7 @@ func (p point) at(grid [][]int) (int, bool) {
 
 func walk(maze [][]int,
 	start, end point) [][]int {
+
 	steps := make([][]int, len(maze))
 	for i := range steps {
 		steps[i] = make([]int, len(maze[i]))
